@@ -1,7 +1,7 @@
 resource "aws_iam_role" "lambda_role" {
-  name                = "terraform-rds-continuous-shutdown-lambda-role"
-  description         = "role for lambda"
-  assume_role_policy  = data.aws_iam_policy_document.lambda_assume_role_policy.json
+  name               = "terraform-rds-continuous-shutdown-lambda-role"
+  description        = "role for lambda"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
 
   inline_policy {
     name = "terraform-rds-continuous-shutdown-lambda-inline-policy"
