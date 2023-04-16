@@ -17,7 +17,7 @@ variable "lambda_function_name" {
 
 variable "db_matcher_name" {
   type        = string
-  default     = "sample"
+  default     = ""
   description = "OPTIONAL: a comma separated substring of to stop DB Cluster name, ex: sample,test"
 }
 
