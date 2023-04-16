@@ -48,12 +48,12 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
 
 data "archive_file" "lambda_archive_file" {
   type        = "zip"
-  source_dir  = "./lambda/rds_keep_stopping"
-  output_path = "./lambda/rds_keep_stopping.zip"
+  source_dir  = "${path.module}/lambda/rds_keep_stopping"
+  output_path = "${path.module}/lambda/rds_keep_stopping.zip"
 }
 
 resource "aws_lambda_function" "lambda_rds_keep_stopping" {
-  filename      = "./lambda/rds_keep_stopping.zip"
+  filename      = "${path.module}/lambda/rds_keep_stopping.zip"
   function_name = var.lambda_function_name
   description   = "continue to stop RDS by terraform module."
   role          = aws_iam_role.lambda_role.arn
