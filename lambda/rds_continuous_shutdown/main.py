@@ -54,13 +54,14 @@ class RDSManager:
 def lambda_handler(event, _context):
     logger.info(f'Event: {str(event)}')
     command = event['command']
-    matcher_names = os.environ['DB_MATCHER_NAMES'].split(',')
+    matcher_names_str = os.environ.get('DB_MATCHER_NAMES', '')
+    matcher_name_list = matcher_names_str.split(',') if matcher_names_str else []
 
     rds = RDSManager()
     if command == 'stop':
-        rds.stop(matcher_names)
+        rds.stop(matcher_name_list)
     elif command == 'start':
-        rds.start(matcher_names)
+        rds.start(matcher_name_list)
     else:
         logger.warn('this event is not allowed')
     logger.info('complete to exec lambda')
