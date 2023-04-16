@@ -10,6 +10,20 @@ This Lambda function starts the specified RDS clusters at a cron schedule, and t
 
 It is recommended to set the cron schedule according to the maintenance window of the RDS.
 
+## Specifying RDS Clusters to Keep Stopped
+
+You can use either method 1 or 2 to specify the RDS clusters.
+
+1. Specify a matching string for the RDS Cluster name
+
+```
+db_matcher_name = "sample,test"
+```
+
+2. Add an 'autostop' tag
+
+Add a tag with Key: `autostop` and Value: `true` to the Cluster tags.
+
 ## Input Variables
 
 | Name                       | Type   | Default                           | Description                                                                           | Required |
