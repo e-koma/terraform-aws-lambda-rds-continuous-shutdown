@@ -1,4 +1,4 @@
-# AWS Lambda RDS Continuous Shutdown Module
+# AWS Lambda RDS Continuous Stopping Module
 
 This Terraform module deploys a Lambda function to continuously stop RDS.
 
@@ -15,7 +15,7 @@ It is recommended to set the cron schedule according to the maintenance window o
 |----------------------------|--------|-----------------------------------|---------------------------------------------------------------------------------------|----------|
 | aws_account_id             | string |                                   | AWS Account ID for deployment                                                         | Yes      |
 | aws_region                 | string | ap-northeast-1                    | AWS Region for deployment                                                             | No       |
-| lambda_function_name       | string | terraform-rds-continuous-shutdown | Name of the Lambda Function                                                           | Yes      |
+| lambda_function_name       | string | terraform-rds-continuous-stopping | Name of the Lambda Function                                                           | Yes      |
 | db_matcher_name            | string | sample                            | A comma-separated list of substrings for matching DB Cluster names, e.g., sample,test | No       |
 | cloudwatch_start_schedule  | string | cron(0 22 ? * SUN *)              | A cron expression to periodically start DB Clusters                                   | No       |
 | cloudwatch_stop_schedule   | string | cron(30 22 ? * SUN *)             | A cron expression to periodically stop DB Clusters                                    | No       |

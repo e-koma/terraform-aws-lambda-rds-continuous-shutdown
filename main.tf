@@ -1,10 +1,10 @@
 resource "aws_iam_role" "lambda_role" {
-  name               = "terraform-rds-continuous-shutdown-lambda-role"
+  name               = "terraform-rds-continuous-stopping-lambda-role"
   description        = "role for lambda"
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
 
   inline_policy {
-    name = "terraform-rds-continuous-shutdown-lambda-inline-policy"
+    name = "terraform-rds-continuous-stopping-lambda-inline-policy"
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
@@ -48,12 +48,12 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
 
 data "archive_file" "lambda_archive_file" {
   type        = "zip"
-  source_dir  = "./lambda/rds_continuous_shutdown"
-  output_path = "./lambda/rds_continuous_shutdown.zip"
+  source_dir  = "./lambda/rds_continuous_stopping"
+  output_path = "./lambda/rds_continuous_stopping.zip"
 }
 
-resource "aws_lambda_function" "lambda_rds_continuous_shutdown" {
-  filename      = "./lambda/rds_continuous_shutdown.zip"
+resource "aws_lambda_function" "lambda_rds_continuous_stopping" {
+  filename      = "./lambda/rds_continuous_stopping.zip"
   function_name = var.lambda_function_name
   description   = "continue to stop RDS by terraform module."
   role          = aws_iam_role.lambda_role.arn
@@ -78,43 +78,43 @@ resource "aws_cloudwatch_log_group" "lambda_cloudwatch_log_group" {
 }
 
 resource "aws_cloudwatch_event_rule" "lambda_cloudwatch_event_start_rule" {
-  name                = "terraform-rds-continuous-shutdown-start-rule"
+  name                = "terraform-rds-continuous-stopping-start-rule"
   description         = "start RDS periodically by terraform module"
   schedule_expression = var.cloudwatch_start_schedule
 }
 
 resource "aws_cloudwatch_event_target" "lambda_cloudwatch_event_start_target" {
   rule      = aws_cloudwatch_event_rule.lambda_cloudwatch_event_start_rule.name
-  target_id = "terraform-rds-continuous-shutdown-start-rule"
-  arn       = aws_lambda_function.lambda_rds_continuous_shutdown.arn
+  target_id = "terraform-rds-continuous-stopping-start-rule"
+  arn       = aws_lambda_function.lambda_rds_continuous_stopping.arn
   input     = "{\"command\":\"start\"}"
 }
 
-resource "aws_lambda_permission" "lambda_rds_continuous_shutdown_start_permission" {
+resource "aws_lambda_permission" "lambda_rds_continuous_stopping_start_permission" {
   statement_id  = "AllowExecutionFromStartCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_rds_continuous_shutdown.function_name
+  function_name = aws_lambda_function.lambda_rds_continuous_stopping.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.lambda_cloudwatch_event_start_rule.arn
 }
 
 resource "aws_cloudwatch_event_rule" "lambda_cloudwatch_event_stop_rule" {
-  name                = "terraform-rds-continuous-shutdown-stop-rule"
+  name                = "terraform-rds-continuous-stopping-stop-rule"
   description         = "stop RDS periodically by terraform module"
   schedule_expression = var.cloudwatch_stop_schedule
 }
 
 resource "aws_cloudwatch_event_target" "lambda_cloudwatch_event_stop_target" {
   rule      = aws_cloudwatch_event_rule.lambda_cloudwatch_event_stop_rule.name
-  target_id = "terraform-rds-continuous-shutdown-stop-rule"
-  arn       = aws_lambda_function.lambda_rds_continuous_shutdown.arn
+  target_id = "terraform-rds-continuous-stopping-stop-rule"
+  arn       = aws_lambda_function.lambda_rds_continuous_stopping.arn
   input     = "{\"command\":\"stop\"}"
 }
 
-resource "aws_lambda_permission" "lambda_rds_continuous_shutdown_stop_permission" {
+resource "aws_lambda_permission" "lambda_rds_continuous_stopping_stop_permission" {
   statement_id  = "AllowExecutionFromStopCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_rds_continuous_shutdown.function_name
+  function_name = aws_lambda_function.lambda_rds_continuous_stopping.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.lambda_cloudwatch_event_stop_rule.arn
 }
