@@ -12,7 +12,7 @@ variable "aws_region" {
 variable "lambda_function_name" {
   type        = string
   default     = "terraform-rds-keep-stopping"
-  description = "REQUIRED: Lambda Function name"
+  description = "OPTIONAL: Lambda Function name"
 }
 
 variable "db_matcher_name" {
